@@ -1,4 +1,5 @@
 import { renderDatabaseView } from "../views/databaseView.js";
+import { getRecords } from "../services/apiService.js";
 
 export function createDatabaseViewModel() {
     const state = {
