@@ -2,7 +2,8 @@ export function renderDatabaseView(state) {
     const rows = state.records
         .map(record => `
             <tr>
-                <td>TEST</td>
+                <td>${record.id}</td>
+                <td>${record.title}</td>
             </tr>
         `)
         .join("");
@@ -28,6 +29,7 @@ export function renderDatabaseView(state) {
                     <thead>
                         <tr>
                             <th>col1</th>
+                            <th>col2</th>
                         </tr>
                     </thead>
 
