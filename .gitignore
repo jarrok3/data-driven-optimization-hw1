@@ -4,3 +4,4 @@ __pycache__/
 .vscode
 Dockerfile
 docker-compose.yml
+data/dummy_data.db
