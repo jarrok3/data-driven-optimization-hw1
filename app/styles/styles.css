@@ -39,3 +39,50 @@
 .database-table td {
     text-align: center;
 }
+
+.repertoire-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+
+/* MODEL PRESET BUTTON */
+
+.preset-button {
+    padding: 10px 16px;
+
+    border: 2px solid #244f73;
+    border-radius: 4px;
+
+    background-color: #dceaf5;
+    color: #163a5f;
+
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.preset-button:hover {
+    background-color: #c6dceb;
+}
+
+
+/* RESET BUTTON */
+
+.reset-button {
+    padding: 10px 16px;
+
+    border: 2px solid #8a6d1d;
+    border-radius: 4px;
+
+    background-color: #fff3c4;
+    color: #5f4a0e;
+
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reset-button:hover {
+    background-color: #f5e39d;
+}
