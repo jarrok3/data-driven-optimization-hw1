@@ -1,3 +1,5 @@
+import { Record } from "../models/dbrecord.js";
+
 export async function getRecords(
     offset = 0,
     limit = 50
@@ -10,8 +12,17 @@ export async function getRecords(
 
     if (!response.ok) {
 
+        const errorText = await response.text();
+
+        console.error(
+            "API error:",
+            response.status,
+            response.statusText,
+            errorText
+        );
+
         throw new Error(
-            "Could not load movies."
+            `Could not load records. HTTP ${response.status}`
         );
 
     }

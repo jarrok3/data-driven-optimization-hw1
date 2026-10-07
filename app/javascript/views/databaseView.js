@@ -13,6 +13,15 @@ export function renderDatabaseView(state) {
         `)
         .join("");
 
+    let statusMessage = "";
+
+    if (state.loading) {
+        statusMessage = "<p>Loading...</p>";
+    }
+    else if (state.records.length === 0) {
+        statusMessage = "<p>No data loaded yet.</p>";
+    }
+
     return `
         <section>
 
@@ -29,7 +38,7 @@ export function renderDatabaseView(state) {
             </p>
 
             <div id="database-content">
-                <table>
+                <table class="database-table">
 
                     <thead>
                         <tr>
@@ -49,11 +58,7 @@ export function renderDatabaseView(state) {
 
                 </table>
 
-                ${
-                    state.loading
-                        ? "<p>Loading...</p>"
-                        : "<p>No data loaded yet.</p>"
-                }
+                ${statusMessage}
 
             </div>
 

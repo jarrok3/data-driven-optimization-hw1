@@ -19,3 +19,23 @@
   background-color: #60d2a4;
   color: #b8b3b3;
 }
+
+.database-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.database-table th,
+.database-table td {
+    border: 1px solid #7f8c9a;
+    padding: 8px 12px;
+}
+
+.database-table th {
+    background-color: #163a5f;
+    color: white;
+}
+
+.database-table td {
+    text-align: center;
+}

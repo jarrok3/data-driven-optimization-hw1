@@ -1,6 +1,8 @@
 import { renderDatabaseView } from "../views/databaseView.js";
 import { getRecords } from "../services/apiService.js";
 
+
+
 export function createDatabaseViewModel() {
     const state = {
         records: [],
@@ -10,6 +12,22 @@ export function createDatabaseViewModel() {
         limit: 50,
         hasMore: true
     };
+
+    function setupLazyLoading() {
+        window.onscroll = async () => {
+
+            const nearBottom =
+                window.innerHeight + window.scrollY
+                >= document.body.offsetHeight - 200;
+
+            if (
+                nearBottom &&
+                !state.loading
+            ) {
+                await loadDatabaseContent();
+            }
+        };
+    }
 
     function render(){
         const appcontent = document.getElementById("app");
@@ -43,6 +61,7 @@ export function createDatabaseViewModel() {
     {
         render();
         await loadDatabaseContent();
+        setupLazyLoading();
     }
 
     return{
