@@ -21,7 +21,12 @@ export async function getRecords(
     return data.map(record =>
         new Record(
             record.id,
-            movie.title
+            record.title_tag,
+            record.venue_tag,
+            record.play_day,
+            record.curtain_time,
+            record.account_tag,
+            record.passes_bought
         )
     );
 }

@@ -3,7 +3,12 @@ export function renderDatabaseView(state) {
         .map(record => `
             <tr>
                 <td>${record.id}</td>
-                <td>${record.title}</td>
+                <td>${record.title_tag}</td>
+                <td>${record.venue_tag}</td>
+                <td>${record.play_day}</td>
+                <td>${record.curtain_time}</td>
+                <td>${record.account_tag}</td>
+                <td>${record.passes_bought}</td>
             </tr>
         `)
         .join("");
@@ -28,8 +33,13 @@ export function renderDatabaseView(state) {
 
                     <thead>
                         <tr>
-                            <th>col1</th>
-                            <th>col2</th>
+                            <th>ID</th>
+                            <th>TITLE</th>
+                            <th>CINEMA_TAG</th>
+                            <th>PLAY_DAY</th>
+                            <th>CURTAIN_TIME</th>
+                            <th>ACCOUNT_TAG</th>
+                            <th>PASSES_BOUGHT</th>
                         </tr>
                     </thead>
 

@@ -7,7 +7,7 @@ from app.api.routes.records import router as dbrecords_router
 # === PREP SECITON ===
 app = FastAPI(
     title="Movie Programming Demo",
-    version="0.0.1"
+    version="0.1.0"
 )
 
 app.mount("/styles", StaticFiles(directory="app/styles"), name="styles")
