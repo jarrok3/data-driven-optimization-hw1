@@ -3,14 +3,17 @@ import random
 import sqlite3
 from datetime import date, timedelta
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
 
 
-DATABASE_PATH = os.getenv(
+SCRIPT_DIR = Path(__file__).resolve().parent
+DATABASE_FILENAME = os.getenv(
     "DATABASE_PATH",
     "dummy_data.db"
 )
+DATABASE_PATH = SCRIPT_DIR / DATABASE_FILENAME
 
 NUMBER_OF_RECORDS = int(
     os.getenv("NUMBER_OF_RECORDS", "10000")
@@ -131,7 +134,7 @@ def generate_screenings():
 
     start_date = date(2026, 1, 1)
 
-    for day_offset in range(90):
+    for day_offset in range(35):
 
         play_day = start_date + timedelta(days=day_offset)
 
