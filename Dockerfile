@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+COPY .env /app/.env
+
 RUN chmod +x /app/scripts/init.sh
 
 ENTRYPOINT ["/app/scripts/init.sh"]
