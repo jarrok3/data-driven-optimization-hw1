@@ -86,3 +86,44 @@
 .reset-button:hover {
     background-color: #f5e39d;
 }
+
+.schedule-result {
+    margin-top: 40px;
+}
+
+.optimization-summary {
+    margin-bottom: 20px;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.schedule-table th,
+.schedule-table td {
+    border: 1px solid #7f8c9a;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.schedule-table th {
+    background-color: #163a5f;
+    color: white;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f4f6f8;
+}
+
+.error-message {
+    margin-top: 20px;
+    padding: 12px;
+    border: 1px solid #b00020;
+}
+
+.generate-section button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}

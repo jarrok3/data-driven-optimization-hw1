@@ -1,4 +1,7 @@
 import { renderHomeView } from "../views/homeView.js";
+import {
+    generateSchedule
+} from "../services/apiService.js";
 
 const DEFAULT_REPERTOIRE = [
     {
@@ -34,39 +37,6 @@ const MODEL_REPERTOIRE = [
         required_blocks: 2
     }
 ];
-
-const state = {
-
-    repertoire: DEFAULT_REPERTOIRE.map(movie => ({
-        ...movie
-    })),
-
-    roomAmount: 1,
-
-    advanced: {
-        visible: false,
-
-        dayWeights: {
-            Monday: 1.00,
-            Tuesday: 1.00,
-            Wednesday: 1.00,
-            Thursday: 1.00,
-            Friday: 1.30,
-            Saturday: 1.50,
-            Sunday: 1.35
-        },
-
-        timeWeights: {
-            "10:00": 0.30,
-            "12:00": 0.40,
-            "14:00": 0.60,
-            "16:00": 1.00,
-            "18:00": 1.50,
-            "20:00": 1.80,
-            "22:00": 1.10
-        }
-    }
-};
 
 export function createHomeViewModel() {
 
@@ -107,6 +77,57 @@ export function createHomeViewModel() {
         }
     };
 
+    async function generate() {
+        state.loading = true;
+        state.error = null;
+        state.result = null;
+
+        render();
+
+        try {
+            const requestData = {
+                repertoire:
+                    state.repertoire.map(
+                        movie => ({
+                            title:
+                                movie.title.trim(),
+
+                            required_blocks:
+                                Number(
+                                    movie.required_blocks
+                                )
+                        })
+                    ),
+
+                room_amount:
+                    state.roomAmount,
+
+                day_weights:
+                    state.advanced.dayWeights,
+
+                time_weights:
+                    state.advanced.timeWeights
+            };
+
+            state.result =
+                await generateSchedule(
+                    requestData
+                );
+
+        } catch (error) {
+
+            console.error(error);
+
+            state.error =
+                error.message;
+
+        } finally {
+
+            state.loading = false;
+
+            render();
+        }
+    }
 
     function render() {
 
@@ -155,6 +176,10 @@ export function createHomeViewModel() {
             "22:00": 1.10
         };
 
+        state.result = null;
+        state.error = null;
+        state.loading = false;
+        
         render();
     }
 
@@ -206,29 +231,6 @@ export function createHomeViewModel() {
 
         render();
     }
-
-
-    function generate() {
-
-        console.log(
-            "Schedule generation parameters:",
-            state
-        );
-
-        /*
-            Later:
-
-            POST /api/schedule/generate
-
-            {
-                repertoire: ...,
-                room_amount: ...,
-                day_weights: ...,
-                time_weights: ...
-            }
-        */
-    }
-
 
     function handleClick(event) {
 

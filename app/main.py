@@ -2,7 +2,13 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.api.routes.records import router as dbrecords_router
+from app.api.routes.optimizer import (
+    router as optimizer_router,
+)
+
+from app.api.routes.records import (
+    router as dbrecords_router,
+)
 
 # === PREP SECITON ===
 app = FastAPI(
@@ -14,6 +20,7 @@ app.mount("/styles", StaticFiles(directory="app/styles"), name="styles")
 app.mount("/javascript", StaticFiles(directory="app/javascript"), name="javascript")
 
 app.include_router(dbrecords_router)
+app.include_router(optimizer_router)
 
 templates = Jinja2Templates(
     directory="app/templates"

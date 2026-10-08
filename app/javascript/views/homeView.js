@@ -1,3 +1,127 @@
+function renderOptimizationResult(result) {
+
+    if (!result) {
+        return "";
+    }
+
+    const isSuccess =
+        result.status === "OPTIMAL"
+        || result.status === "FEASIBLE";
+
+    if (!isSuccess) {
+        return `
+            <section class="schedule-result">
+
+                <h2>Optimization result</h2>
+
+                <p>
+                    Status:
+                    <strong>${result.status}</strong>
+                </p>
+
+                <p>
+                    No feasible schedule was found.
+                </p>
+
+            </section>
+        `;
+    }
+
+    return `
+        <section class="schedule-result">
+
+            <h2>Optimized schedule</h2>
+
+            <div class="optimization-summary">
+
+                <p>
+                    Status:
+                    <strong>${result.status}</strong>
+                </p>
+
+                <p>
+                    Expected total attendance:
+                    <strong>
+                        ${Math.round(
+                            result.objective_value
+                        )}
+                    </strong>
+                </p>
+
+            </div>
+
+            ${renderScheduleTable(
+                result.schedule
+            )}
+
+        </section>
+    `;
+}
+
+function renderScheduleTable(schedule) {
+
+    if (!schedule || schedule.length === 0) {
+        return `
+            <p>
+                Schedule is empty.
+            </p>
+        `;
+    }
+
+    const rows = schedule
+        .map(screening => `
+            <tr>
+
+                <td>
+                    ${screening.day}
+                </td>
+
+                <td>
+                    ${screening.start_time}
+                </td>
+
+                <td>
+                    ${screening.room}
+                </td>
+
+                <td>
+                    ${screening.title}
+                </td>
+
+                <td>
+                    ${screening.required_blocks}
+                </td>
+
+                <td>
+                    ${screening.occupied_slots.join(", ")}
+                </td>
+
+            </tr>
+        `)
+        .join("");
+
+    return `
+        <table class="schedule-table">
+
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Start time</th>
+                    <th>Room</th>
+                    <th>Movie</th>
+                    <th>Required blocks</th>
+                    <th>Occupied slots</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                ${rows}
+            </tbody>
+
+        </table>
+    `;
+}
+
 export function renderHomeView(state) {
 
     const repertoireRows = state.repertoire
@@ -237,11 +361,29 @@ export function renderHomeView(state) {
                     type="button"
                     data-action="generate"
                     class="preset-button"
+                    ${state.loading ? "disabled" : ""}
                 >
-                    GENERATE
+                    ${
+                        state.loading
+                            ? "OPTIMIZING..."
+                            : "GENERATE"
+                    }
                 </button>
 
             </section>
+
+            ${state.error
+                ? `
+                    <div class="error-message">
+                        ${state.error}
+                    </div>
+                `
+                : ""
+            }
+
+            ${renderOptimizationResult(
+                state.result
+            )}
 
         </section>
     `;

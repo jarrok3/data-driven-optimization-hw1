@@ -41,3 +41,33 @@ export async function getRecords(
         )
     );
 }
+
+export async function generateSchedule(
+    optimizationData
+) {
+    const response = await fetch(
+        "/api/optimize",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(
+                optimizationData
+            )
+        }
+    );
+
+    if (!response.ok) {
+        const errorText =
+            await response.text();
+
+        throw new Error(
+            `Optimization failed: ${errorText}`
+        );
+    }
+
+    return await response.json();
+}

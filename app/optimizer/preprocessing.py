@@ -61,7 +61,15 @@ def filter_records(
     """
 
     if reference_date is None:
-        reference_date = date.today()
+        if not records:
+            return []
+
+        reference_date = max(
+            date.fromisoformat(
+                record["play_day"]
+            )
+            for record in records
+        ) + timedelta(days=1)
 
     window_end = (
         reference_date
