@@ -18,5 +18,5 @@ DAYS_OF_WEEK = [
     "Saturday",
     "Sunday",
 ]
-MIN_ROOMS = 1
-MAX_ROOMS = 8
+MIN_ROOM_AMOUNT = 1
+MAX_ROOM_AMOUNT = 8
