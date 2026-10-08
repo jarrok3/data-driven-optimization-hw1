@@ -9,5 +9,14 @@ TIME_SLOTS = [
     "20:00",
     "22:00",
 ]
+DAYS_OF_WEEK = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+]
 MIN_ROOMS = 1
 MAX_ROOMS = 8
