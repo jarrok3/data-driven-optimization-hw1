@@ -1,6 +1,7 @@
 import { renderHomeView } from "../views/homeView.js";
 import {
-    generateSchedule
+    generateSchedule,
+    generateBaselineSchedule
 } from "../services/apiService.js";
 
 const DEFAULT_REPERTOIRE = [
@@ -49,6 +50,14 @@ export function createHomeViewModel() {
             }
         ],
 
+        optimizedResult: null,
+        baselineResult: null,
+
+        optimizedLoading: false,
+        baselineLoading: false,
+
+        error: null,
+
         roomAmount: 1,
 
         advanced: {
@@ -77,56 +86,102 @@ export function createHomeViewModel() {
         }
     };
 
-    async function generate() {
-        state.loading = true;
-        state.error = null;
-        state.result = null;
+    async function generateOptimized() {
+
+    state.optimizedLoading = true;
+    state.error = null;
+    state.optimizedResult = null;
+
+    render();
+
+    try {
+
+        const requestData =
+            buildRequestData();
+
+        state.optimizedResult =
+            await generateSchedule(
+                requestData
+            );
+
+        console.log(
+            "Optimized result:",
+            state.optimizedResult
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        state.error =
+            error.message;
+
+    } finally {
+
+        state.optimizedLoading = false;
 
         render();
+    }
+    }
 
-        try {
-            const requestData = {
-                repertoire:
-                    state.repertoire.map(
-                        movie => ({
-                            title:
-                                movie.title.trim(),
+    async function generateBaseline() {
 
-                            required_blocks:
-                                Number(
-                                    movie.required_blocks
-                                )
-                        })
-                    ),
+    state.baselineLoading = true;
+    state.error = null;
+    state.baselineResult = null;
 
-                room_amount:
-                    state.roomAmount,
+    render();
 
-                day_weights:
-                    state.advanced.dayWeights,
+    try {
 
-                time_weights:
-                    state.advanced.timeWeights
-            };
+        const requestData =
+            buildRequestData();
 
-            state.result =
-                await generateSchedule(
-                    requestData
-                );
+        state.baselineResult =
+            await generateBaselineSchedule(
+                requestData
+            );
 
-        } catch (error) {
+        console.log(
+            "Baseline result:",
+            state.baselineResult
+        );
 
-            console.error(error);
+    } catch (error) {
 
-            state.error =
-                error.message;
+        console.error(error);
 
-        } finally {
+        state.error =
+            error.message;
 
-            state.loading = false;
+    } finally {
 
-            render();
-        }
+        state.baselineLoading = false;
+
+        render();
+    }
+    }
+
+    function buildRequestData() {
+        return {
+
+            repertoire: state.repertoire.map(
+                movie => ({
+                    title: movie.title.trim(),
+                    required_blocks:
+                        Number(movie.required_blocks)
+                })
+            ),
+
+            room_amount:
+                state.roomAmount,
+
+            day_weights:
+                state.advanced.dayWeights,
+
+            time_weights:
+                state.advanced.timeWeights
+        };
     }
 
     function render() {
@@ -176,10 +231,14 @@ export function createHomeViewModel() {
             "22:00": 1.10
         };
 
-        state.result = null;
+        state.baselineResult = null;
+        state.optimizedResult = null;
+
+        state.baselineLoading = false;
+        state.optimizedLoading = false;
+
         state.error = null;
-        state.loading = false;
-        
+
         render();
     }
 
@@ -278,8 +337,12 @@ export function createHomeViewModel() {
                 resetToDefaults();
                 break;
 
-            case "generate":
-                generate();
+            case "generate-optimized":
+                generateOptimized();
+                break;
+
+            case "generate-baseline":
+                generateBaseline();
                 break;
         }
     }

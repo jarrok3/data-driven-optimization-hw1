@@ -12,12 +12,18 @@ from app.optimizer.engine import (
     solve_schedule,
 )
 
+from app.optimizer.baseline import (
+    generate_baseline_schedule,
+)
+
+from app.optimizer.objective import (
+    evaluate_schedule,
+)
 
 router = APIRouter(
     prefix="/api",
     tags=["optimizer"],
 )
-
 
 # =========================================================
 # DATABASE
@@ -94,8 +100,69 @@ class OptimizationRequest(BaseModel):
 
 
 # =========================================================
-# OPTIMIZATION ENDPOINT
+# OPTIMIZATION ENDPOINTS
 # =========================================================
+@router.post("/baseline")
+def generate_baseline(
+    request: OptimizationRequest
+):
+    historical_records = (
+        load_historical_records()
+    )
+
+    repertoire = [
+        movie.model_dump()
+        for movie in request.repertoire
+    ]
+
+    historical_parameters = (
+        build_historical_parameters(
+            records=historical_records,
+            time_weights=request.time_weights,
+            day_weights=request.day_weights,
+        )
+    )
+
+    schedule = generate_baseline_schedule(
+        repertoire=repertoire,
+        room_amount=request.room_amount,
+    )
+
+    evaluation = evaluate_schedule(
+        schedule=schedule,
+
+        base_attendance=
+            historical_parameters[
+                "base_attendance"
+            ],
+
+        overtime_popularity=
+            historical_parameters[
+                "overtime_popularity"
+            ],
+
+        day_weights=
+            request.day_weights,
+
+        time_weights=
+            request.time_weights,
+    )
+
+    return {
+        "status": "BASELINE",
+
+        "objective_value":
+            evaluation["objective_value"],
+
+        "schedule":
+            schedule,
+
+        "attendance":
+            evaluation["attendance"],
+
+        "message":
+            "Baseline schedule generated successfully."
+    }
 
 @router.post("/optimize")
 def optimize_schedule(

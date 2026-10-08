@@ -71,3 +71,34 @@ export async function generateSchedule(
 
     return await response.json();
 }
+
+export async function generateBaselineSchedule(
+    optimizationData
+) {
+    const response = await fetch(
+        "/api/baseline",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(
+                optimizationData
+            )
+        }
+    );
+
+    if (!response.ok) {
+
+        const errorText =
+            await response.text();
+
+        throw new Error(
+            `Baseline generation failed: ${errorText}`
+        );
+    }
+
+    return await response.json();
+}

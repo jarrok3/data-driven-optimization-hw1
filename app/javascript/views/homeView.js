@@ -1,63 +1,3 @@
-function renderOptimizationResult(result) {
-
-    if (!result) {
-        return "";
-    }
-
-    const isSuccess =
-        result.status === "OPTIMAL"
-        || result.status === "FEASIBLE";
-
-    if (!isSuccess) {
-        return `
-            <section class="schedule-result">
-
-                <h2>Optimization result</h2>
-
-                <p>
-                    Status:
-                    <strong>${result.status}</strong>
-                </p>
-
-                <p>
-                    No feasible schedule was found.
-                </p>
-
-            </section>
-        `;
-    }
-
-    return `
-        <section class="schedule-result">
-
-            <h2>Optimized schedule</h2>
-
-            <div class="optimization-summary">
-
-                <p>
-                    Status:
-                    <strong>${result.status}</strong>
-                </p>
-
-                <p>
-                    Expected total attendance:
-                    <strong>
-                        ${Math.round(
-                            result.objective_value
-                        )}
-                    </strong>
-                </p>
-
-            </div>
-
-            ${renderScheduleTable(
-                result.schedule
-            )}
-
-        </section>
-    `;
-}
-
 function renderScheduleTable(schedule) {
 
     if (!schedule || schedule.length === 0) {
@@ -119,6 +59,52 @@ function renderScheduleTable(schedule) {
             </tbody>
 
         </table>
+    `;
+}
+
+function renderScheduleResult(
+    result,
+    title
+) {
+
+    if (!result) {
+        return "";
+    }
+
+    return `
+        <section class="schedule-result">
+
+            <h2>
+                ${title}
+            </h2>
+
+            <p>
+                Status:
+                <strong>
+                    ${result.status}
+                </strong>
+            </p>
+
+            ${
+                result.objective_value !== undefined
+                    ? `
+                        <p>
+                            Expected total attendance:
+                            <strong>
+                                ${Math.round(
+                                    result.objective_value
+                                )}
+                            </strong>
+                        </p>
+                    `
+                    : ""
+            }
+
+            ${renderScheduleTable(
+                result.schedule
+            )}
+
+        </section>
     `;
 }
 
@@ -356,20 +342,31 @@ export function renderHomeView(state) {
             <!-- GENERATE -->
 
             <section class="generate-section">
-
                 <button
                     type="button"
-                    data-action="generate"
-                    class="preset-button"
-                    ${state.loading ? "disabled" : ""}
+                    data-action="generate-baseline"
+                    class="secondary-button"
+                    ${state.baselineLoading ? "disabled" : ""}
                 >
                     ${
-                        state.loading
-                            ? "OPTIMIZING..."
-                            : "GENERATE"
+                        state.baselineLoading
+                            ? "GENERATING BASELINE..."
+                            : "GENERATE BASELINE"
                     }
                 </button>
 
+                <button
+                    type="button"
+                    data-action="generate-optimized"
+                    class="preset-button"
+                    ${state.optimizedLoading ? "disabled" : ""}
+                >
+                    ${
+                        state.optimizedLoading
+                            ? "OPTIMIZING..."
+                            : "GENERATE OPTIMIZED"
+                    }
+                </button>
             </section>
 
             ${state.error
@@ -381,8 +378,14 @@ export function renderHomeView(state) {
                 : ""
             }
 
-            ${renderOptimizationResult(
-                state.result
+            ${renderScheduleResult(
+                state.baselineResult,
+                "Baseline schedule"
+            )}
+
+            ${renderScheduleResult(
+                state.optimizedResult,
+                "CP-SAT optimized schedule"
             )}
 
         </section>
